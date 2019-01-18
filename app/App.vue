@@ -14,8 +14,8 @@
 </template>
 
 <script>
-//import '!file-loader?name=index.html!extract-loader!html-loader!pug-html-loader!./index.pug'
 import 'semantic-ui-offline/semantic.min.css'
+
 export default {
 
   components: {
@@ -24,18 +24,10 @@ export default {
     'user-page': require('./components/UserPage.vue').default,
   },
 
-  created() {
-  },
-
   data() { return {
+    // page: 'deterioration',
     page: 'house',
   }},
-
-  methods: {
-  },
-
-  mounted() {
-  },
 
 }
 </script>

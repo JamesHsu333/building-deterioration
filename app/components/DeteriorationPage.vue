@@ -1,27 +1,15 @@
 <template lang="pug">
 #deterioration-page
 
-  #deterioration.ui.form(v-show="itemId")
-    .field
-      label 劣化位置所在樓層
-      select
-        option 請選擇
-    .field
-      label 劣化位置空間名稱
-      select
-        option 請選擇
-    .field
-      label 劣化部位
-      select
-        option 請選擇
-    .field
-      label 劣化種類
-      select
-        option 請選擇
-    .field
-      label 劣化程度(選填)
-      select
-        option 請選擇
+  #deterioration.ui.inverted.form(v-show="itemId")
+    .-two-column
+      .field
+        label 劣化位置所在樓層
+        input(v-model.number="item.floor",placeholder="請輸入")
+      base-select(:items="selects.spaces",label="劣化位置空間名稱",v-model="item.space")
+      base-select(:items="selects.parts",label="劣化部位",v-model="item.part")
+      base-select(:items="selects.types",label="劣化種類",v-model="item.type")
+      base-select(:items="selects.degrees",label="劣化程度(選填)",v-model="item.degree")
     button.ui.inverted.button(@click="itemId = null") 確認
 
   #deterioration-list.-two-column(v-show="!itemId")
@@ -38,14 +26,33 @@
 <script>
 export default {
 
+  components: {
+    'base-select': require('./BaseSelect.vue').default,
+  },
+
   data() { return {
 
-    itemId: null,
+    item: {
+      degree: '',
+      floors: 1,
+      part: '',
+      space: '',
+      type: '',
+    },
+
+    itemId: 1,
 
     itemIds: ['dummy', 'dummy', 'dummy', 'dummy', 'dummy'],
 
     items: {
       dummy: { name: '' },
+    },
+
+    selects: {
+      degrees: ['程度'],
+      spaces: ['空間'],
+      parts: ['部位'],
+      types: ['種類'],
     },
 
   }},
@@ -54,10 +61,8 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-#deterioration-page *:not(input):not(select)
-  color: white !important
-
 #deterioration-list
+  color: white
   text-align: center
 
   .-item

@@ -3,10 +3,10 @@
 
   #house.ui.inverted.form(v-show="itemId")
     .field
-      i.huge.icons
+      i.inverted.huge.icons
         i.circular.camera.icon
         i.corner.add.icon
-      h3.ui.header 建築物整體外觀
+      h3.ui.inverted.header 建築物整體外觀
     .-two-column
       base-select(:items="selects.cities",label="縣市",v-model="item.city")
       base-select(:items="selects.areas[item.city]",label="鄉鎮市區",v-model="item.area")
@@ -72,12 +72,10 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-#house-page *:not(input):not(select)
-  color: white !important
-
 #house
 
   > :first-child
+    color: white
     text-align: center
 
     .ui.header
@@ -85,6 +83,7 @@ export default {
       margin-left: 1em
 
 #house-list
+  color: white
   text-align: center
 
   .-item

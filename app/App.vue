@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import '!file-loader?name=index.html!extract-loader!html-loader!pug-html-loader!./index.pug'
+//import '!file-loader?name=index.html!extract-loader!html-loader!pug-html-loader!./index.pug'
 import 'semantic-ui-offline/semantic.min.css'
 export default {
 

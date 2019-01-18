@@ -28,7 +28,7 @@ export default {
   },
 
   data() { return {
-    page: 'user',
+    page: 'house',
   }},
 
   methods: {
@@ -46,6 +46,14 @@ body, button, h1, h2, h3, h4, h5
 
 body
   background-color: rgba(0,0,0,.5)
+
+.-two-column
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-between
+
+  > *
+    flex: 0 0 49%
 </style>
 
 <!--

@@ -24,7 +24,7 @@
         option 請選擇
     button.ui.inverted.button(@click="itemId = null") 確認
 
-  #deterioration-list(v-show="!itemId")
+  #deterioration-list.-two-column(v-show="!itemId")
     .-item(@click="itemId = 1")
       i.huge.icons
         i.circular.home.icon
@@ -58,13 +58,9 @@ export default {
   color: white !important
 
 #deterioration-list
-  display: flex
-  flex-wrap: wrap
-  justify-content: space-evenly
   text-align: center
 
   .-item
-    flex: 0 0 34vw
     margin: 1em 0
 
     p

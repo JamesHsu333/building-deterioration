@@ -1,60 +1,26 @@
 <template lang="pug">
 #house-page
 
-  #house.ui.form(v-show="itemId")
+  #house.ui.inverted.form(v-show="itemId")
     .field
       i.huge.icons
         i.circular.camera.icon
         i.corner.add.icon
       h3.ui.header 建築物整體外觀
-    .field
-      label 地址
-      // {{{
-      .inline.field
-        label 縣市
-        select
-          option 請選擇
-          option(value="1") 台北市
-          option(value="2") 新北市
-        label 鄉鎮市區
-        select
-          option 請選擇
-        label 路
-        select
-          option 請選擇
-        label 段
-        select
-          option 請選擇
-        label 號
-        select
-          option 請選擇
-        label 樓
-        select
-          option 請選擇
-      // }}}
-    .field
-      label 建築類型
-      select
-        option 請選擇
-        option 商辦建築
-        option 集合住宅
-        option 透天住宅
-    .field
-      label 建築構造
-      select
-        option 請選擇
-        option 鋼筋混凝土
-        option 鋼骨鋼筋混凝土
-        option 鋼構造
-        option 木構造
-        option 磚造
-    .field
-      label 建築物樓層數
-      select
-        option 請選擇
+    .-two-column
+      base-select(:items="selects.cities",label="縣市",v-model="item.city")
+      base-select(:items="selects.areas[item.city]",label="鄉鎮市區",v-model="item.area")
+      .field
+        label 路巷弄號
+        input(v-model="item.road",placeholder="請輸入")
+      base-select(:items="selects.buildingTypes",label="建築類型",v-model="item.buildingType")
+      base-select(:items="selects.buildingStructures",label="建築構造",v-model="item.buildingStructure")
+      .field
+        label 建築物樓層數
+        input(v-model.number="item.nFloors",placeholder="請輸入")
     button.ui.inverted.button(@click="itemId = null") 確認
 
-  #house-list(v-show="!itemId")
+  #house-list.-two-column(v-show="!itemId")
     .-item(@click="itemId = 1")
       i.huge.icons
         i.circular.home.icon
@@ -68,14 +34,36 @@
 <script>
 export default {
 
+  components: {
+    'base-select': require('./BaseSelect.vue').default,
+  },
+
   data() { return {
 
-    itemId: null,
+    item: {
+      area: '',
+      buildingStructure: '',
+      buildingType: '',
+      city: '',
+      nFloors: 1,
+    },
+
+    itemId: 1,
 
     itemIds: ['dummy', 'dummy', 'dummy', 'dummy', 'dummy'],
 
     items: {
       dummy: { name: '' },
+    },
+
+    selects: {
+      areas: {
+        台北市: [],
+        新北市: ['中和區', '永和區'],
+      },
+      buildingStructures: ['鋼筋混凝土', '鋼骨鋼筋混凝土', '鋼構造', '木構造', '磚造'],
+      buildingTypes: ['商辦建築', '集合住宅', '透天住宅'],
+      cities: ['台北市', '新北市'],
     },
 
   }},
@@ -96,23 +84,10 @@ export default {
       display: inline-block
       margin-left: 1em
 
-  .inline
-
-    label
-      margin-right: 0
-
-    select
-      margin: 0 1em 0 .5em
-      padding: 0
-
 #house-list
-  display: flex
-  flex-wrap: wrap
-  justify-content: space-evenly
   text-align: center
 
   .-item
-    flex: 0 0 34vw
     margin: 1em 0
 
     p

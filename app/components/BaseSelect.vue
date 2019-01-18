@@ -11,3 +11,11 @@ export default {
   props: ['items', 'label', 'value']
 }
 </script>
+
+<style lang="sass" scoped>
+.ui.form .field:last-child
+  margin-bottom: 1em
+
+.ui.form select
+  padding: .5em 1em
+</style>

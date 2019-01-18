@@ -1,5 +1,5 @@
 <template lang="pug">
-#v-app
+div
 
   .ui.icon.inverted.item.labeled.three.menu
     a.item(:class="{active: page == 'user'}",@click="page = 'user'") #[i.user.icon]登入
@@ -40,12 +40,16 @@ body
   background-color: rgba(0,0,0,.5)
 
 .-two-column
+  align-items: stretch
   display: flex
   flex-wrap: wrap
   justify-content: space-between
 
   > *
     flex: 0 0 49%
+
+.ui.menu
+  border-radius: 0
 </style>
 
 <!--

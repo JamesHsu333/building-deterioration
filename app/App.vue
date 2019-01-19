@@ -48,6 +48,9 @@ body
   > *
     flex: 0 0 49%
 
+  .ui.form & .field:last-child
+    margin-bottom: 1em
+
 .ui.menu
   border-radius: 0
 </style>

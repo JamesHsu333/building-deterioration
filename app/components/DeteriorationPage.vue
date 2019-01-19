@@ -1,8 +1,11 @@
 <template lang="pug">
 #deterioration-page
 
-  #deterioration.ui.inverted.form(v-show="itemId")
+  #deterioration.ui.inverted.form(v-show="-1 != iItem")
     .-two-column
+      .field
+        label 名稱
+        input(v-model="item.name",placeholder="請輸入")
       .field
         label 劣化位置所在樓層
         input(v-model.number="item.floor",placeholder="請輸入")
@@ -10,17 +13,17 @@
       base-select(:items="selects.parts",label="劣化部位",v-model="item.part")
       base-select(:items="selects.types",label="劣化種類",v-model="item.type")
       base-select(:items="selects.degrees",label="劣化程度(選填)",v-model="item.degree")
-    button.ui.inverted.button(@click="itemId = null") 確認
+    button.ui.inverted.button(@click="saveItem") 確認
 
-  #deterioration-list.-two-column(v-show="!itemId")
-    .-item(@click="itemId = 1")
+  #deterioration-list.-two-column(v-show="-1 === iItem")
+    .-item(@click="newItem")
       i.huge.icons
-        i.circular.home.icon
+        i.circular.bolt.icon
         i.corner.add.icon
       p 新增劣化部位
-    .-item(v-for="v in itemIds")
-      i.circular.huge.home.icon
-      p {{ items[v].name }}
+    .-item(v-for="(v, i) in items",@click="editItem(i)")
+      i.circular.huge.bolt.icon
+      p {{ v.name }}
 </template>
 
 <script>
@@ -31,31 +34,50 @@ export default {
   },
 
   data() { return {
-
     item: {
       degree: '',
       floors: 1,
+      name: '未命名',
       part: '',
       space: '',
       type: '',
     },
-
-    itemId: 1,
-
-    itemIds: ['dummy', 'dummy', 'dummy', 'dummy', 'dummy'],
-
-    items: {
-      dummy: { name: '' },
-    },
-
+    iItem: -1,
+    items: [],
     selects: {
       degrees: ['程度'],
       spaces: ['空間'],
       parts: ['部位'],
       types: ['種類'],
     },
-
   }},
+
+  methods: {
+
+    editItem(iItem) {
+      this.iItem = iItem
+      Object.assign(this.item, this.items[this.iItem])
+    },
+
+    newItem() {
+      this.iItem = this.items.length
+      this.items.push({
+        degree: '',
+        floors: 1,
+        name: '未命名',
+        part: '',
+        space: '',
+        type: '',
+      })
+      Object.assign(this.item, this.items[this.iItem])
+    },
+
+    saveItem() {
+      Object.assign(this.items[this.iItem], this.item)
+      this.iItem = -1
+    },
+
+  },
 
 }
 </script>

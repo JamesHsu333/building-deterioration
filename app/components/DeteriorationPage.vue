@@ -1,7 +1,7 @@
 <template lang="pug">
 #deterioration-page
 
-  #deterioration.ui.inverted.form(v-show="-1 != iItem")
+  #deterioration.ui.form(v-show="!disabled && -1 != iItem")
     .-two-column
       .field
         label 名稱
@@ -13,9 +13,10 @@
       base-select(:items="selects.parts",label="劣化部位",v-model="item.part")
       base-select(:items="selects.types",label="劣化種類",v-model="item.type")
       base-select(:items="selects.degrees",label="劣化程度(選填)",v-model="item.degree")
-    button.ui.inverted.button(@click="saveItem") 確認
+    .ui.fixed.icon.item.menu
+      .item: button.ui.primary.button(@click="saveItem") 確認
 
-  #deterioration-list.-two-column(v-show="-1 === iItem")
+  #deterioration-list.-two-column(v-show="!disabled && -1 === iItem")
     .-item(@click="newItem")
       i.huge.icons
         i.circular.bolt.icon
@@ -24,6 +25,10 @@
     .-item(v-for="(v, i) in items",@click="editItem(i)")
       i.circular.huge.bolt.icon
       p {{ v.name }}
+    .ui.fixed.icon.item.labeled.menu
+      .item: button.ui.primary.button(:class="{disabled: 0 === items.length}") 送出
+
+  #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
 </template>
 
 <script>
@@ -31,6 +36,16 @@ export default {
 
   components: {
     'base-select': require('./BaseSelect.vue').default,
+  },
+
+  computed: {
+    disabled() {
+      if (!this.loggedIn)
+        return '請先登入'
+      if (-1 === this.iHouse)
+        return '請先選擇房屋'
+      return false
+    },
   },
 
   data() { return {
@@ -79,12 +94,17 @@ export default {
 
   },
 
+  props: ['iHouse', 'logged-in'],
+
 }
 </script>
 
 <style lang="sass" scoped>
+.ui.fixed.menu
+  bottom: 0
+  top: auto
+
 #deterioration-list
-  color: white
   text-align: center
 
   .-item
@@ -92,6 +112,9 @@ export default {
 
     p
       margin: .5em 0
+
+#disabled
+  text-align: center
 </style>
 
 <!--

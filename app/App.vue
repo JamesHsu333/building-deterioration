@@ -1,14 +1,25 @@
 <template lang="pug">
 div
 
-  .ui.icon.inverted.item.labeled.three.menu
-    a.item(:class="{active: page == 'user'}",@click="page = 'user'") #[i.user.icon]登入
-    a.item(:class="{active: page == 'house'}",@click="page = 'house'") #[i.home.icon]我的房屋
-    a.item(:class="{active: page == 'deterioration'}",@click="page = 'deterioration'") #[i.bolt.icon]劣化部位
+  .ui.fixed.icon.item.labeled.three.menu
+    .item(:class="{active: page == 'user'}",@click="page = 'user'") #[i.user.icon]登入
+    .item(:class="{active: page == 'house'}",@click="page = 'house'") #[i.home.icon]我的房屋
+    .item(:class="{active: page == 'deterioration'}",@click="page = 'deterioration'") #[i.bolt.icon]劣化部位
 
   .ui.container
-    deterioration-page(v-show="'deterioration' === page",text="page")
-    house-page(v-show="'house' === page",text="page")
+    deterioration-page(
+      v-show="'deterioration' === page"
+      :i-house="iHouse"
+      :logged-in="true"
+      text="page"
+    )
+    house-page(
+      v-show="'house' === page"
+      @item-change="onHouseChange"
+      :logged-in="true"
+      @save="page = 'deterioration'"
+      text="page"
+    )
     user-page(v-show="'user' === page",text="page")
 
 </template>
@@ -25,9 +36,16 @@ export default {
   },
 
   data() { return {
+    iHouse: -1,
     // page: 'deterioration',
     page: 'house',
   }},
+
+  methods: {
+    onHouseChange(i) {
+      this.iHouse = i
+    },
+  },
 
 }
 </script>
@@ -35,9 +53,6 @@ export default {
 <style lang="sass">
 body, button, h1, h2, h3, h4, h5
   font-family: "Microsoft JhengHei" !important
-
-body
-  background-color: rgba(0,0,0,.5)
 
 .-two-column
   align-items: stretch
@@ -53,6 +68,9 @@ body
 
 .ui.menu
   border-radius: 0
+
+.ui.container
+  padding-top: 7em
 </style>
 
 <!--

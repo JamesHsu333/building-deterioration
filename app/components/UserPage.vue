@@ -9,7 +9,7 @@
   .ui.form
     .inline.field #[i.inverted.user.icon]#[label 屋主]#[input]
     .inline.field #[i.inverted.user.icon]#[label 志工]#[input]
-    button.ui.inverted.button 登入
+    button.ui.primary.button 登入
 </template>
 
 <script>
@@ -24,9 +24,6 @@ export default {
 <style lang="sass" scoped>
 #user-page
   text-align: center
-
-  *
-    color: white !important
 
   >:first-child
     margin: 2em 0

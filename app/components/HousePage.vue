@@ -1,12 +1,14 @@
 <template lang="pug">
 #house-page
 
-  #house.ui.inverted.form(v-show="-1 != iItem")
+  #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
+
+  #house.ui.form(v-show="!disabled && -1 != iItem")
     .field
-      i.inverted.huge.icons
+      i.huge.icons
         i.circular.camera.icon
         i.corner.add.icon
-      h3.ui.inverted.header 建築物整體外觀
+      h3.ui.header 建築物整體外觀
     .-two-column
       .field
         label 名稱
@@ -21,15 +23,16 @@
       .field
         label 建築物樓層數
         input(v-model.number="item.nFloors",placeholder="請輸入")
-    button.ui.inverted.button(@click="saveItem") 確認
+    .ui.fixed.icon.item.menu
+      .item: button.ui.primary.button(@click="saveItem") 確認
 
-  #house-list.-two-column(v-show="-1 === iItem")
+  #house-list.-two-column(v-show="!disabled && -1 === iItem")
     .-item(@click="newItem")
       i.huge.icons
         i.circular.home.icon
         i.corner.add.icon
       p 新增建築物
-    .-item(v-for="(v, i) in items",@click="editItem(i)")
+    .-item(v-for="(v, i) in items",@click="selectItem(i)")
       i.circular.huge.home.icon
       p {{ v.name }}
 </template>
@@ -39,6 +42,14 @@ export default {
 
   components: {
     'base-select': require('./BaseSelect.vue').default,
+  },
+
+  computed: {
+    disabled() {
+      if (!this.loggedIn)
+        return '請先登入'
+      return false
+    },
   },
 
   data() { return {
@@ -65,11 +76,6 @@ export default {
 
   methods: {
 
-    editItem(iItem) {
-      this.iItem = iItem
-      Object.assign(this.item, this.items[this.iItem])
-    },
-
     newItem() {
       this.iItem = this.items.length
       this.items.push({
@@ -78,26 +84,38 @@ export default {
         buildingType: '',
         city: '',
         name: '未命名',
-        nFloors: 2,
+        nFloors: 1,
       })
       Object.assign(this.item, this.items[this.iItem])
+      this.$emit('item-change', this.iItem)
     },
 
     saveItem() {
       Object.assign(this.items[this.iItem], this.item)
-      this.iItem = -1
+      this.$emit('save')
+    },
+
+    selectItem(iItem) {
+      this.iItem = iItem
+      Object.assign(this.item, this.items[this.iItem])
+      this.$emit('item-change', this.iItem)
     },
 
   },
+
+  props: ['logged-in'],
 
 }
 </script>
 
 <style lang="sass" scoped>
+.ui.fixed.menu
+  bottom: 0
+  top: auto
+
 #house
 
   > :first-child
-    color: white
     text-align: center
 
     .ui.header
@@ -105,7 +123,6 @@ export default {
       margin-left: 1em
 
 #house-list
-  color: white
   text-align: center
 
   .-item
@@ -113,6 +130,9 @@ export default {
 
     p
       margin: .5em 0
+
+#disabled
+  text-align: center
 </style>
 
 <!--

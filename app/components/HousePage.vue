@@ -3,12 +3,16 @@
 
   #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
 
-  #house.ui.form(v-show="!disabled && -1 != iItem")
+  #house.ui.form(v-if="!disabled && -1 != iItem")
     .field
-      i.huge.icons
-        i.circular.camera.icon
-        i.corner.add.icon
-      h3.ui.header 建築物整體外觀
+      vue-picture-input(
+        height="200"
+        :hideChangeButton="true"
+        :plain="true"
+        :prefill="defaultPhoto"
+        ref="photo"
+        :width="containerWidth")
+      .-photo-label #[i.camera.icon]建築物外觀
     .-two-column
       .field
         label 名稱
@@ -42,17 +46,22 @@ export default {
 
   components: {
     'base-select': require('./BaseSelect.vue').default,
+    'vue-picture-input': require('vue-picture-input').default,
   },
 
   computed: {
+
     disabled() {
       if (!this.loggedIn)
         return '請先登入'
       return false
     },
+
   },
 
   data() { return {
+    containerWidth: window.innerWidth,
+    defaultPhoto: require('../lance-anderson-213491-unsplash.jpg'),
     item: {
       area: '',
       buildingStructure: '',
@@ -83,7 +92,7 @@ export default {
         buildingStructure: '',
         buildingType: '',
         city: '',
-        name: '未命名',
+        name: `未命名${this.iItem+1}`,
         nFloors: 1,
       })
       Object.assign(this.item, this.items[this.iItem])
@@ -103,6 +112,10 @@ export default {
 
   },
 
+  mounted() {
+    this.newItem()
+  },
+
   props: ['logged-in'],
 
 }
@@ -113,14 +126,9 @@ export default {
   bottom: 0
   top: auto
 
-#house
+#house .field
+  position: relative
 
-  > :first-child
-    text-align: center
-
-    .ui.header
-      display: inline-block
-      margin-left: 1em
 
 #house-list
   text-align: center

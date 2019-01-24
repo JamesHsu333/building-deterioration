@@ -1,5 +1,8 @@
 import Vue from 'vue'
+import VueJsModal from 'vue-js-modal'
 import App from './App.vue'
+
+Vue.use(VueJsModal, { componentName: 'vue-js-modal' })
 
 new Vue({
   el: '#app',

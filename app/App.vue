@@ -7,6 +7,11 @@ div
       | {{ user ? '登出' : '登入' }}
     .item(:class="{active: page == 'house'}",@click="page = 'house'") #[i.home.icon]我的房屋
     .item(:class="{active: page == 'deterioration'}",@click="page = 'deterioration'") #[i.bolt.icon]劣化部位
+  vue-js-modal(name="logout",height="auto",width="90%"): .ui.active.modal
+    .content: h3.ui.header 確定要登出嗎？
+    .actions
+      button.ui.cancel.button(@click="$modal.hide('logout')") 取消
+      button.ui.primary.approve.button(@click="logout") 確認
 
   .ui.container
     deterioration-page(
@@ -56,14 +61,21 @@ export default {
       this.user = 'guest'
     },
 
+    logout() {
+      this.page = 'user'
+      this.user = null
+      this.$modal.hide('logout')
+    },
+
     onHouseChange(i) {
       this.iHouse = i
     },
 
     onUser() {
-      this.page = 'user'
       if (this.user)
-        this.user = null
+        this.$modal.show('logout')
+      else
+        this.page = 'user'
     }
 
   },
@@ -99,6 +111,12 @@ body, button, h1, h2, h3, h4, h5
 
 .ui.menu
   border-radius: 0
+
+.v--modal
+  margin: 0
+
+  .ui.modal
+    width: 100%
 
 .ui.container
   padding-top: 6.3em

@@ -80,7 +80,7 @@ body, button, h1, h2, h3, h4, h5
   border-radius: 0
 
 .ui.container
-  padding-top: 7em
+  padding-top: 6.3em
 </style>
 
 <!--

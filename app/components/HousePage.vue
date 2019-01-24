@@ -4,15 +4,7 @@
   #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
 
   #house.ui.form(v-if="!disabled && -1 != iItem")
-    .field
-      vue-picture-input(
-        height="200"
-        :hideChangeButton="true"
-        :plain="true"
-        :prefill="defaultPhoto"
-        ref="photo"
-        :width="containerWidth")
-      .-photo-label #[i.camera.icon]建築物外觀
+    photo-input(label="建築物外觀")
     .-two-column
       .field
         label 名稱
@@ -45,8 +37,8 @@
 export default {
 
   components: {
-    'base-select': require('./BaseSelect.vue').default,
-    'vue-picture-input': require('vue-picture-input').default,
+    'base-select': require('./BaseSelect').default,
+    'photo-input': require('./PhotoInput').default,
   },
 
   computed: {
@@ -60,8 +52,6 @@ export default {
   },
 
   data() { return {
-    containerWidth: window.innerWidth,
-    defaultPhoto: require('../lance-anderson-213491-unsplash.jpg'),
     item: {
       area: '',
       buildingStructure: '',

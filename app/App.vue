@@ -2,7 +2,9 @@
 div
 
   .ui.fixed.icon.item.labeled.three.menu
-    .item(:class="{active: page == 'user'}",@click="page = 'user'") #[i.user.icon]登入
+    .item(:class="{active: page == 'user'}",@click="onUser")
+      i.user.icon
+      | {{ user ? '登出' : '登入' }}
     .item(:class="{active: page == 'house'}",@click="page = 'house'") #[i.home.icon]我的房屋
     .item(:class="{active: page == 'deterioration'}",@click="page = 'deterioration'") #[i.bolt.icon]劣化部位
 
@@ -10,17 +12,22 @@ div
     deterioration-page(
       v-show="'deterioration' === page"
       :i-house="iHouse"
-      :logged-in="true"
+      :logged-in="user"
       text="page"
     )
     house-page(
       v-show="'house' === page"
       @item-change="onHouseChange"
-      :logged-in="true"
+      :logged-in="user"
       @save="page = 'deterioration'"
       text="page"
     )
-    user-page(v-show="'user' === page",text="page")
+    user-page(
+      v-show="'user' === page"
+      @guest-login="guestLogin"
+      :logged-in="user"
+      text="page"
+    )
 
 </template>
 
@@ -36,15 +43,29 @@ export default {
   },
 
   data() { return {
+    user: null,
     iHouse: -1,
     // page: 'deterioration',
-    page: 'house',
+    page: 'user',
   }},
 
   methods: {
+
+    guestLogin() {
+      this.page = 'house'
+      this.user = 'guest'
+    },
+
     onHouseChange(i) {
       this.iHouse = i
     },
+
+    onUser() {
+      this.page = 'user'
+      if (this.user)
+        this.user = null
+    }
+
   },
 
 }

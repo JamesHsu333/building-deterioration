@@ -103,7 +103,7 @@ export default {
   },
 
   mounted() {
-    this.newItem()
+    // this.newItem()
   },
 
   props: ['logged-in'],

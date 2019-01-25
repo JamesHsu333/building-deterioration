@@ -7,17 +7,17 @@
     photo-input(label="建築物外觀")
     .-two-column
       .field
-        label 名稱
+        label 建物名稱
         input(v-model="item.name",placeholder="請輸入")
       base-select(:items="selects.cities",label="縣市",v-model="item.city")
-      base-select(:items="selects.areas[item.city]",label="鄉鎮市區",v-model="item.area")
+      base-select(:items="selects.districts[item.city]",label="市區鄉鎮",v-model="item.district")
       .field
         label 路巷弄號
         input(v-model="item.road",placeholder="請輸入")
-      base-select(:items="selects.buildingTypes",label="建築類型",v-model="item.buildingType")
-      base-select(:items="selects.buildingStructures",label="建築構造",v-model="item.buildingStructure")
+      base-select(:items="selects.usages",label="建築用途",v-model="item.usage")
+      base-select(:items="selects.constructions",label="構造類別",v-model="item.construction")
       .field
-        label 建築物樓層數
+        label 樓層
         input(v-model.number="item.nFloors",placeholder="請輸入")
     .ui.fixed.icon.item.menu
       .item: button.ui.primary.button(@click="saveItem") 確認
@@ -53,23 +53,22 @@ export default {
 
   data() { return {
     item: {
-      area: '',
-      buildingStructure: '',
-      buildingType: '',
+      district: '',
       city: '',
+      construction: '',
       name: '未命名',
       nFloors: 1,
+      usage: '',
     },
     iItem: -1,
     items: [],
     selects: {
-      areas: {
-        台北市: [],
-        新北市: ['中和區', '永和區'],
+      cities: ['台南市'],
+      constructions: ['鋼筋混凝土', '鋼骨鋼筋混凝土', '鋼構造', '木構造', '磚造'],
+      districts: {
+        台南市: ['東區', '南區', '北區', '安南區', '安平區', '中西區'],
       },
-      buildingStructures: ['鋼筋混凝土', '鋼骨鋼筋混凝土', '鋼構造', '木構造', '磚造'],
-      buildingTypes: ['商辦建築', '集合住宅', '透天住宅'],
-      cities: ['台北市', '新北市'],
+      usages: ['商辦建築', '集合住宅', '透天住宅'],
     },
   }},
 
@@ -78,12 +77,12 @@ export default {
     newItem() {
       this.iItem = this.items.length
       this.items.push({
-        area: '',
-        buildingStructure: '',
-        buildingType: '',
-        city: '',
+        district: '',
+        city: '台南市',
+        construction: '',
         name: `未命名${this.iItem+1}`,
         nFloors: 1,
+        usage: '',
       })
       Object.assign(this.item, this.items[this.iItem])
       this.$emit('item-change', this.iItem)

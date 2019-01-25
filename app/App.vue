@@ -6,7 +6,7 @@ div
       i.user.icon
       | {{ user ? '登出' : '登入' }}
     .item(:class="{active: page == 'house'}",@click="page = 'house'") #[i.home.icon]我的房屋
-    .item(:class="{active: page == 'deterioration'}",@click="page = 'deterioration'") #[i.bolt.icon]劣化部位
+    .item(:class="{active: page == 'deterioration'}",@click="page = 'deterioration'") #[i.bolt.icon]劣化記錄
   vue-js-modal(name="logout",height="auto",width="90%"): .ui.active.modal
     .content: h3.ui.header 確定要登出嗎？
     .actions
@@ -14,22 +14,22 @@ div
       button.ui.primary.approve.button(@click="logout") 確認
 
   .ui.container
-    deterioration-page(
-      v-show="'deterioration' === page"
-      :i-house="iHouse"
+    login-page(
+      v-show="'user' === page"
+      @guest-login="guestLogin"
       :logged-in="user"
       text="page"
     )
-    house-page(
+    building-page(
       v-show="'house' === page"
       @item-change="onHouseChange"
       :logged-in="user"
       @save="page = 'deterioration'"
       text="page"
     )
-    user-page(
-      v-show="'user' === page"
-      @guest-login="guestLogin"
+    deterioration-page(
+      v-show="'deterioration' === page"
+      :i-house="iHouse"
       :logged-in="user"
       text="page"
     )
@@ -42,9 +42,9 @@ import 'semantic-ui-offline/semantic.min.css'
 export default {
 
   components: {
+    'building-page': require('./components/BuildingPage.vue').default,
     'deterioration-page': require('./components/DeteriorationPage.vue').default,
-    'house-page': require('./components/HousePage.vue').default,
-    'user-page': require('./components/UserPage.vue').default,
+    'login-page': require('./components/LoginPage.vue').default,
   },
 
   data() { return {

@@ -8,11 +8,11 @@
         label 名稱
         input(v-model="item.name",placeholder="請輸入")
       .field
-        label 劣化位置所在樓層
+        label 座落樓層
         input(v-model.number="item.floor",placeholder="請輸入")
-      base-select(:items="selects.spaces",label="劣化位置空間名稱",v-model="item.space")
-      base-select(:items="selects.parts",label="劣化部位",v-model="item.part")
       base-select(:items="selects.types",label="劣化種類",v-model="item.type")
+      base-select(:items="selects.elements",label="部位",v-model="item.element")
+      base-select(:items="selects.spaces",label="空間名稱",v-model="item.space")
       base-select(:items="selects.degrees",label="劣化程度(選填)",v-model="item.degree")
     .ui.fixed.icon.item.menu
       .item: button.ui.primary.button(@click="saveItem") 確認
@@ -22,7 +22,7 @@
       i.huge.icons
         i.circular.bolt.icon
         i.corner.add.icon
-      p 新增劣化部位
+      p 新增劣化記錄
     .-item(v-for="(v, i) in items",@click="editItem(i)")
       i.circular.huge.bolt.icon
       p {{ v.name }}
@@ -53,9 +53,9 @@ export default {
   data() { return {
     item: {
       degree: '',
-      floors: 1,
+      element: '',
+      floor: 1,
       name: '未命名',
-      part: '',
       space: '',
       type: '',
     },
@@ -80,9 +80,9 @@ export default {
       this.iItem = this.items.length
       this.items.push({
         degree: '',
-        floors: 1,
+        element: '',
+        floor: 1,
         name: `未命名${this.iItem+1}`,
-        part: '',
         space: '',
         type: '',
       })

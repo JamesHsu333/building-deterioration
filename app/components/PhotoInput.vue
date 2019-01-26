@@ -12,11 +12,11 @@
   )
   .ui.bottom.attached.icon.menu
     .item #[i.plus.icon]&nbsp;新增
-    .item(@click="full = true"): i.expand.icon
+    .item(@click="expand"): i.expand.icon
     .right.menu
       .item: i.angle.left.icon
       .item: i.angle.right.icon
-  canvas(ref="canvas",:style="canvasStyle")
+  canvas(@click="full = false",ref="canvas",:style="canvasStyle")
 </template>
 
 <script>
@@ -27,6 +27,16 @@ export default {
   },
 
   computed: {
+
+    canvasStyle() {
+      if (!this.full)
+        return {}
+      return {
+        opacity: 1,
+        zIndex: 201,
+      }
+    },
+
   },
 
   data() { return {
@@ -36,6 +46,22 @@ export default {
   }},
 
   methods: {
+
+    expand() {
+      this.full = true
+      const canvas = this.$refs.canvas
+      const image = this.$refs.photo.imageObject
+
+      const [ A1, A2 ] = [ image.width, canvas.width ]
+      const dA = A2 - A1
+      const [ B1, B2 ] = [ image.height, canvas.height ]
+      const dB = B2 - B1
+      const [ A3, B3 ] = dA < dB
+        ? [ A1 + A1 * dB / B1, B2 ]
+        : [ A2, B1 + B1 * dA / A1 ]
+      this.$refs.canvas.getContext('2d').drawImage(image, (A2 - A3) / 2, (B2 - B3) / 2, A3, B3)
+    },
+
   },
 
   mounted() {
@@ -50,7 +76,6 @@ export default {
 
 <style lang="sass" scoped>
 canvas
-  background-color: red
   left: 0
   opacity: 0
   position: fixed

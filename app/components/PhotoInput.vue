@@ -2,6 +2,8 @@
 .field
   label {{ label }}
   vue-picture-input(
+    :changeOnClick="false"
+    @click="expand"
     height="160"
     :hideChangeButton="true"
     :plain="true"
@@ -10,12 +12,12 @@
     :width="containerWidth"
     :zIndex="200"
   )
-  .ui.bottom.attached.icon.menu
-    .item #[i.plus.icon]&nbsp;新增
-    .item(@click="expand"): i.expand.icon
+  .ui.bottom.attached.menu
+    .item(@click="$refs.photo.selectImage()") #[i.camera.icon]拍照
+    .item #[i.images.outline.icon]新增
     .right.menu
-      .item: i.angle.left.icon
-      .item: i.angle.right.icon
+      .icon.item: i.angle.left.icon
+      .icon.item: i.angle.right.icon
   canvas(@click="full = false",ref="canvas",:style="canvasStyle")
 </template>
 

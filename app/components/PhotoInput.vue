@@ -1,17 +1,19 @@
 <template lang="pug">
 .field
+  label {{ label }}
   vue-picture-input(
-    height="200"
+    height="160"
     :hideChangeButton="true"
     :plain="true"
     :prefill="defaultPhoto"
     ref="photo"
     :width="containerWidth")
   .ui.bottom.attached.icon.menu
-    .item {{ label }}&nbsp;#[i.plus.icon]
+    .item #[i.plus.icon]&nbsp;新增
     .item: i.expand.icon
-    .item: i.angle.left.icon
-    .item: i.angle.right.icon
+    .right.menu
+      .item: i.angle.left.icon
+      .item: i.angle.right.icon
 </template>
 
 <script>

@@ -87,16 +87,6 @@ export default {
 body, button, h1, h2, h3, h4, h5
   font-family: "Microsoft JhengHei" !important
 
-.-photo-label
-  background-color: rgba(0,0,0,.25)
-  border-top-left-radius: 4px
-  bottom: 0
-  color: white
-  padding: .2em .5em
-  position: absolute
-  right: 0
-  z-index: 10002
-
 .-two-column
   align-items: stretch
   display: flex
@@ -119,7 +109,8 @@ body, button, h1, h2, h3, h4, h5
     width: 100%
 
 .ui.container
-  padding-top: 6.3em
+  padding-bottom: 3.5em
+  padding-top: 6.2em
 </style>
 
 <!--

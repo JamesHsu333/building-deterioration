@@ -24,6 +24,7 @@ div
       v-show="'house' === page"
       @item-change="onHouseChange"
       :logged-in="user"
+      ref="building"
       @save="page = 'deterioration'"
       text="page"
     )
@@ -78,6 +79,12 @@ export default {
         this.page = 'user'
     }
 
+  },
+
+  mounted() {
+    this.page = 'house'
+    this.user = 'guest'
+    this.$refs.building.newItem()
   },
 
 }

@@ -44,7 +44,7 @@ export default {
     disabled() {
       if (!this.loggedIn)
         return '請先登入'
-      if (-1 === this.iHouse)
+      if (-1 === this.iBuilding)
         return '請先選擇房屋'
       return false
     },
@@ -96,7 +96,7 @@ export default {
 
   },
 
-  props: ['iHouse', 'logged-in'],
+  props: ['iBuilding', 'logged-in'],
 
 }
 </script>

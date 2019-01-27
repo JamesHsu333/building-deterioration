@@ -5,7 +5,7 @@ div
     .item(:class="{active: page == 'user'}",@click="onUser")
       i.user.icon
       | {{ user ? '登出' : '登入' }}
-    .item(:class="{active: page == 'house'}",@click="page = 'house'") #[i.home.icon]我的房屋
+    .item(:class="{active: page == 'building'}",@click="page = 'building'") #[i.home.icon]我的房屋
     .item(:class="{active: page == 'deterioration'}",@click="page = 'deterioration'") #[i.bolt.icon]劣化記錄
   vue-js-modal(name="logout",height="auto",width="90%"): .ui.active.modal
     .content: h3.ui.header 確定要登出嗎？
@@ -21,16 +21,16 @@ div
       text="page"
     )
     building-page(
-      v-show="'house' === page"
-      @item-change="onHouseChange"
+      v-show="'building' === page"
+      @item-change="changeBuilding"
       :logged-in="user"
       ref="building"
-      @save="page = 'deterioration'"
+      @page-change="changePage"
       text="page"
     )
     deterioration-page(
       v-show="'deterioration' === page"
-      :i-house="iHouse"
+      :i-building="iBuilding"
       :logged-in="user"
       text="page"
     )
@@ -50,15 +50,23 @@ export default {
 
   data() { return {
     user: null,
-    iHouse: -1,
+    iBuilding: -1,
     // page: 'deterioration',
     page: 'user',
   }},
 
   methods: {
 
+    changeBuilding(i) {
+      this.iBuilding = i
+    },
+
+    changePage(page) {
+      this.page = page
+    },
+
     guestLogin() {
-      this.page = 'house'
+      this.page = 'building'
       this.user = 'guest'
     },
 
@@ -66,10 +74,6 @@ export default {
       this.page = 'user'
       this.user = null
       this.$modal.hide('logout')
-    },
-
-    onHouseChange(i) {
-      this.iHouse = i
     },
 
     onUser() {
@@ -82,7 +86,7 @@ export default {
   },
 
   mounted() {
-    this.page = 'house'
+    this.page = 'building'
     this.user = 'guest'
     this.$refs.building.newItem()
   },

@@ -1,9 +1,9 @@
 <template lang="pug">
-#house-page
+#building-page
 
   #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
 
-  #house.ui.form(v-if="!disabled && -1 != iItem")
+  #building.ui.form(v-if="!disabled && -1 != iItem")
     photo-input(label="建築物外觀")
     .-two-column
       .field
@@ -19,16 +19,17 @@
       .field
         label 樓層
         input(v-model.number="item.nFloors",placeholder="請輸入")
-    .ui.fixed.icon.item.menu
-      .item: button.ui.primary.button(@click="saveItem") 確認
+    .ui.fixed.item.menu: .item
+      button.ui.button(@click="list") #[i.angle.left.icon]房屋列表
+      button.ui.button(@click="deterioration") 劣化記錄#[i.angle.right.icon]
 
-  #house-list.-two-column(v-show="!disabled && -1 === iItem")
+  #building-list.-two-column(v-show="!disabled && -1 === iItem")
     .-item(@click="newItem")
       i.huge.icons
         i.circular.home.icon
         i.corner.add.icon
       p 新增建築物
-    .-item(v-for="(v, i) in items",@click="selectItem(i)")
+    .-item(v-for="(v, i) in items",@click="changeItem(i)")
       i.circular.huge.home.icon
       p {{ v.name }}
 </template>
@@ -51,7 +52,7 @@ export default {
 
   },
 
-  data() { return {
+  data() { return { // {{{
     item: {
       district: '',
       city: '',
@@ -70,9 +71,26 @@ export default {
       },
       usages: ['商辦建築', '集合住宅', '透天住宅'],
     },
-  }},
+  }}, // }}}
 
   methods: {
+
+    changeItem(iItem) {
+      this.iItem = iItem
+      if (-1 != iItem)
+        Object.assign(this.item, this.items[iItem])
+      this.$emit('item-change', iItem)
+    },
+
+    deterioration() {
+      this.saveItem()
+      this.$emit('page-change', 'deterioration')
+    },
+
+    list() {
+      this.saveItem()
+      this.changeItem(-1)
+    },
 
     newItem() {
       this.iItem = this.items.length
@@ -84,25 +102,13 @@ export default {
         nFloors: 1,
         usage: '',
       })
-      Object.assign(this.item, this.items[this.iItem])
-      this.$emit('item-change', this.iItem)
+      this.changeItem(this.iItem)
     },
 
     saveItem() {
       Object.assign(this.items[this.iItem], this.item)
-      this.$emit('save')
     },
 
-    selectItem(iItem) {
-      this.iItem = iItem
-      Object.assign(this.item, this.items[this.iItem])
-      this.$emit('item-change', this.iItem)
-    },
-
-  },
-
-  mounted() {
-    // this.newItem()
   },
 
   props: ['logged-in'],
@@ -115,11 +121,14 @@ export default {
   bottom: 0
   top: auto
 
-#house .field
+  .ui.button + .ui.button
+    margin-left: .5em
+
+#building .field
   position: relative
 
 
-#house-list
+#building-list
   text-align: center
 
   .-item

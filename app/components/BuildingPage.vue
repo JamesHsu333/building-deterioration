@@ -3,7 +3,7 @@
 
   #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
 
-  #building.ui.form(v-if="!disabled && undefined != iItem")
+  #building.ui.form(v-if="!disabled && building")
     photo-input(label="建築物外觀")
     .-two-column
       .field
@@ -23,7 +23,7 @@
       button.ui.primary.button(@click="list") #[i.chevron.left.icon]房屋列表
       button.ui.primary.button(@click="deterioration") 劣化記錄#[i.chevron.right.icon]
 
-  #building-list.-two-column(v-show="!disabled && undefined == iItem")
+  #building-list.-two-column(v-show="!disabled && !building")
     .-item(@click="newItem")
       i.huge.icons
         i.circular.home.icon
@@ -36,6 +36,7 @@
 
 <script>
 const defaultBuilding = {
+  deteriorations: [],
   district: '',
   city: '台南市',
   construction: '',
@@ -53,14 +54,14 @@ export default {
 
   computed: {
 
+    building() {
+      return this.$store.getters.building
+    },
+
     disabled() {
       if (!this.$store.state.user)
         return '請先登入'
       return false
-    },
-
-    iItem() {
-      return this.$store.state.iBuilding
     },
 
     items() {
@@ -70,7 +71,7 @@ export default {
   },
 
   data() { return { // {{{
-    item: {...defaultBuilding},
+    item: { ...defaultBuilding },
     selects: {
       cities: ['台南市'],
       constructions: ['鋼筋混凝土', '鋼骨鋼筋混凝土', '鋼構造', '木構造', '磚造'],
@@ -94,15 +95,15 @@ export default {
     },
 
     newItem() {
-      const building = { ...defaultBuilding }
-      building.name += this.$store.state.buildings.length + 1
-      this.$store.commit('addBuilding', building)
+      const item = { ...defaultBuilding }
+      item.name += this.items.length + 1
+      this.$store.commit('addBuilding', item)
       this.setItem(-1)
     },
 
     setItem(i) {
       this.$store.commit('setIBuilding', i)
-      this.item = { ...this.$store.getters.item }
+      this.item = { ...this.building }
     },
 
   },

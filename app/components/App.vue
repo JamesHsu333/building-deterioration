@@ -28,7 +28,6 @@ div
     )
     deterioration-page(
       v-show="'deterioration' === page"
-      :i-building="iBuilding"
       text="page"
     )
 
@@ -84,8 +83,8 @@ export default {
 
   mounted() {
     this.$store.commit('setUser', 'guest')
-    this.page = 'building'
     this.$refs.building.newItem()
+    this.page = 'deterioration'
   },
 
 }

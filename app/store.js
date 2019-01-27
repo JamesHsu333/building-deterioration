@@ -5,22 +5,52 @@ Vue.use(Vuex)
 
 const getters = {
 
-  item(state) {
-    return state.buildings[state.iBuilding]
+  building(state) {
+    const i = state.iBuilding
+    if (undefined === i)
+      return undefined
+    return state.buildings[i]
+  },
+
+  deterioration(state, getters) {
+    const i = state.iDeterioration
+    const items = getters.deteriorations
+    if (undefined === i || undefined === items)
+      return undefined
+    return items[i]
+  },
+
+  deteriorations(state, getters) {
+    if (undefined === getters.building)
+      return []
+    return getters.building.deteriorations
   },
 
 }
 
 const mutations = {
 
-  addBuilding(state, building) {
-    state.buildings.push(building)
+  addBuilding(state, item) {
+    state.buildings.push(item)
   },
 
-  setBuilding(state, building) {
+  addDeterioration(state, item) {
+    const building = state.buildings[state.iBuilding]
+    building.deteriorations.push(item)
+  },
+
+  setDeterioration(state, item) {
+    const building = state.buildings[state.iBuilding]
+    building.deteriorations[state.iDeterioration] = {
+      ...building.deteriorations[state.iDeterioration],
+      ...item,
+    }
+  },
+
+  setBuilding(state, item) {
     state.buildings[state.iBuilding] = {
       ...state.buildings[state.iBuilding],
-      ...building,
+      ...item,
     }
   },
 
@@ -28,6 +58,16 @@ const mutations = {
     if (i < 0)
       i += state.buildings.length
     state.iBuilding = i
+    state.iDeteorioration = undefined
+  },
+
+  setIDeterioration(state, i) {
+    const building = state.buildings[state.iBuilding]
+    if (!building)
+      return
+    if (i < 0)
+      i += building.deteriorations.length
+    state.iDeterioration = i
   },
 
   setUser(state, user) {
@@ -39,6 +79,7 @@ const mutations = {
 const state = {
   buildings: [],
   iBuilding: undefined,
+  iDeterioration: undefined,
   user: undefined,
 }
 

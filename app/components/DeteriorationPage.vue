@@ -1,7 +1,7 @@
 <template lang="pug">
 #deterioration-page
 
-  #deterioration.ui.form(v-if="!disabled && -1 != iItem")
+  #deterioration.ui.form(v-if="!disabled && deterioration")
     photo-input(label="劣化部位外觀")
     .-two-column
       .field
@@ -17,13 +17,13 @@
     .ui.fixed.icon.item.menu
       .item: button.ui.primary.button(@click="saveItem") #[i.check.icon]確認
 
-  #deterioration-list.-two-column(v-show="!disabled && -1 === iItem")
+  #deterioration-list.-two-column(v-show="!disabled && !deterioration")
     .-item(@click="newItem")
       i.huge.icons
         i.circular.bolt.icon
         i.corner.add.icon
       p 新增劣化記錄
-    .-item(v-for="(v, i) in items",@click="editItem(i)")
+    .-item(v-for="(v, i) in items",@click="setItem(i)")
       i.circular.huge.bolt.icon
       p {{ v.name }}
     .ui.fixed.icon.item.labeled.menu: .item
@@ -33,6 +33,15 @@
 </template>
 
 <script>
+const defaultDeterioration = {
+  degree: '',
+  element: '',
+  floor: 1,
+  name: '未命名',
+  space: '',
+  type: '',
+}
+
 export default {
 
   components: {
@@ -41,26 +50,27 @@ export default {
   },
 
   computed: {
+
+    deterioration() {
+      return this.$store.getters.deterioration
+    },
+
     disabled() {
       if (!this.$store.state.user)
         return '請先登入'
-      if (-1 === this.iBuilding)
+      if (undefined === this.$store.state.iBuilding)
         return '請先選擇房屋'
       return false
     },
+
+    items() {
+      return this.$store.getters.deteriorations
+    },
+
   },
 
   data() { return {
-    item: {
-      degree: '',
-      element: '',
-      floor: 1,
-      name: '未命名',
-      space: '',
-      type: '',
-    },
-    iItem: -1,
-    items: [],
+    item: { ...defaultDeterioration },
     selects: {
       degrees: ['程度'],
       spaces: ['空間'],
@@ -71,32 +81,24 @@ export default {
 
   methods: {
 
-    editItem(iItem) {
-      this.iItem = iItem
-      Object.assign(this.item, this.items[this.iItem])
-    },
-
     newItem() {
-      this.iItem = this.items.length
-      this.items.push({
-        degree: '',
-        element: '',
-        floor: 1,
-        name: `未命名${this.iItem+1}`,
-        space: '',
-        type: '',
-      })
-      Object.assign(this.item, this.items[this.iItem])
+      const item = { ...defaultDeterioration }
+      item.name += this.items.length + 1
+      this.$store.commit('addDeterioration', item)
+      this.setItem(-1)
     },
 
     saveItem() {
-      Object.assign(this.items[this.iItem], this.item)
-      this.iItem = -1
+      this.$store.commit('setDeterioration', this.item)
+      this.$store.commit('setIDeterioration')
+    },
+
+    setItem(i) {
+      this.$store.commit('setIDeterioration', i)
+      this.item = { ...this.deterioration }
     },
 
   },
-
-  props: ['i-building', 'logged-in'],
 
 }
 </script>

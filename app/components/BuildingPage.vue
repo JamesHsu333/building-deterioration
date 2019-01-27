@@ -3,7 +3,7 @@
 
   #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
 
-  #building.ui.form(v-if="!disabled && -1 != iItem")
+  #building.ui.form(v-if="!disabled && undefined != iItem")
     photo-input(label="建築物外觀")
     .-two-column
       .field
@@ -23,18 +23,27 @@
       button.ui.primary.button(@click="list") #[i.chevron.left.icon]房屋列表
       button.ui.primary.button(@click="deterioration") 劣化記錄#[i.chevron.right.icon]
 
-  #building-list.-two-column(v-show="!disabled && -1 === iItem")
+  #building-list.-two-column(v-show="!disabled && undefined == iItem")
     .-item(@click="newItem")
       i.huge.icons
         i.circular.home.icon
         i.corner.add.icon
       p 新增建築物
-    .-item(v-for="(v, i) in items",@click="changeItem(i)")
+    .-item(v-for="(v, i) in items",@click="setItem(i)")
       i.circular.huge.home.icon
       p {{ v.name }}
 </template>
 
 <script>
+const defaultBuilding = {
+  district: '',
+  city: '台南市',
+  construction: '',
+  name: '未命名',
+  nFloors: 1,
+  usage: '',
+}
+
 export default {
 
   components: {
@@ -50,19 +59,18 @@ export default {
       return false
     },
 
+    iItem() {
+      return this.$store.state.iBuilding
+    },
+
+    items() {
+      return this.$store.state.buildings
+    },
+
   },
 
   data() { return { // {{{
-    item: {
-      district: '',
-      city: '',
-      construction: '',
-      name: '未命名',
-      nFloors: 1,
-      usage: '',
-    },
-    iItem: -1,
-    items: [],
+    item: {...defaultBuilding},
     selects: {
       cities: ['台南市'],
       constructions: ['鋼筋混凝土', '鋼骨鋼筋混凝土', '鋼構造', '木構造', '磚造'],
@@ -75,43 +83,29 @@ export default {
 
   methods: {
 
-    changeItem(iItem) {
-      this.iItem = iItem
-      if (-1 != iItem)
-        Object.assign(this.item, this.items[iItem])
-      this.$emit('item-change', iItem)
-    },
-
     deterioration() {
-      this.saveItem()
+      this.$store.commit('setBuilding', this.item)
       this.$emit('page-change', 'deterioration')
     },
 
     list() {
-      this.saveItem()
-      this.changeItem(-1)
+      this.$store.commit('setBuilding', this.item)
+      this.$store.commit('setIBuilding')
     },
 
     newItem() {
-      this.iItem = this.items.length
-      this.items.push({
-        district: '',
-        city: '台南市',
-        construction: '',
-        name: `未命名${this.iItem+1}`,
-        nFloors: 1,
-        usage: '',
-      })
-      this.changeItem(this.iItem)
+      const building = { ...defaultBuilding }
+      building.name += this.$store.state.buildings.length + 1
+      this.$store.commit('addBuilding', building)
+      this.setItem(-1)
     },
 
-    saveItem() {
-      Object.assign(this.items[this.iItem], this.item)
+    setItem(i) {
+      this.$store.commit('setIBuilding', i)
+      this.item = { ...this.$store.getters.item }
     },
 
   },
-
-  props: ['logged-in'],
 
 }
 </script>

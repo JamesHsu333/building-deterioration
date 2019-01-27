@@ -68,7 +68,7 @@ export default {
     },
 
     logout() {
-      this.$store.commit('setUser', null)
+      this.$store.commit('setUser')
       this.page = 'user'
       this.$modal.hide('logout')
     },

@@ -20,8 +20,8 @@
         label 樓層
         input(v-model.number="item.nFloors",placeholder="請輸入")
     .ui.fixed.item.menu: .item
-      button.ui.button(@click="list") #[i.angle.left.icon]房屋列表
-      button.ui.button(@click="deterioration") 劣化記錄#[i.angle.right.icon]
+      button.ui.primary.button(@click="list") #[i.chevron.left.icon]房屋列表
+      button.ui.primary.button(@click="deterioration") 劣化記錄#[i.chevron.right.icon]
 
   #building-list.-two-column(v-show="!disabled && -1 === iItem")
     .-item(@click="newItem")

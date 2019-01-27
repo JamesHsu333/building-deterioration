@@ -15,7 +15,7 @@
       base-select(:items="selects.spaces",label="空間名稱",v-model="item.space")
       base-select(:items="selects.degrees",label="劣化程度(選填)",v-model="item.degree")
     .ui.fixed.icon.item.menu
-      .item: button.ui.primary.button(@click="saveItem") 確認
+      .item: button.ui.primary.button(@click="saveItem") #[i.check.icon]確認
 
   #deterioration-list.-two-column(v-show="!disabled && -1 === iItem")
     .-item(@click="newItem")
@@ -26,8 +26,8 @@
     .-item(v-for="(v, i) in items",@click="editItem(i)")
       i.circular.huge.bolt.icon
       p {{ v.name }}
-    .ui.fixed.icon.item.labeled.menu
-      .item: button.ui.primary.button(:class="{disabled: 0 === items.length}") 送出
+    .ui.fixed.icon.item.labeled.menu: .item
+      button.ui.primary.button(:class="{disabled: 0 === items.length}") #[i.upload.icon]送出
 
   #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
 </template>
@@ -96,7 +96,7 @@ export default {
 
   },
 
-  props: ['iBuilding', 'logged-in'],
+  props: ['i-building', 'logged-in'],
 
 }
 </script>

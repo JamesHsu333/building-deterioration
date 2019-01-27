@@ -16,8 +16,8 @@
     .item(@click="$refs.photo.selectImage()") #[i.camera.icon]拍照
     .item #[i.images.outline.icon]新增
     .right.menu
-      .icon.item: i.angle.left.icon
-      .icon.item: i.angle.right.icon
+      .icon.item: i.chevron.left.icon
+      .icon.item: i.chevron.right.icon
   canvas(@click="full = false",ref="canvas",:style="canvasStyle")
 </template>
 

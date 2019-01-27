@@ -4,7 +4,7 @@ div
   .ui.fixed.icon.item.labeled.three.menu
     .item(:class="{active: page == 'user'}",@click="onUser")
       i.user.icon
-      | {{ user ? '登出' : '登入' }}
+      | {{ $store.state.user ? '登出' : '登入' }}
     .item(:class="{active: page == 'building'}",@click="page = 'building'") #[i.home.icon]我的房屋
     .item(:class="{active: page == 'deterioration'}",@click="page = 'deterioration'") #[i.bolt.icon]劣化記錄
   vue-js-modal(name="logout",height="auto",width="90%"): .ui.active.modal
@@ -17,13 +17,11 @@ div
     login-page(
       v-show="'user' === page"
       @guest-login="guestLogin"
-      :logged-in="user"
       text="page"
     )
     building-page(
       v-show="'building' === page"
       @item-change="changeBuilding"
-      :logged-in="user"
       ref="building"
       @page-change="changePage"
       text="page"
@@ -31,7 +29,6 @@ div
     deterioration-page(
       v-show="'deterioration' === page"
       :i-building="iBuilding"
-      :logged-in="user"
       text="page"
     )
 
@@ -43,9 +40,9 @@ import 'semantic-ui-offline/semantic.min.css'
 export default {
 
   components: {
-    'building-page': require('./components/BuildingPage.vue').default,
-    'deterioration-page': require('./components/DeteriorationPage.vue').default,
-    'login-page': require('./components/LoginPage.vue').default,
+    'building-page': require('./BuildingPage.vue').default,
+    'deterioration-page': require('./DeteriorationPage.vue').default,
+    'login-page': require('./LoginPage.vue').default,
   },
 
   data() { return {
@@ -66,18 +63,18 @@ export default {
     },
 
     guestLogin() {
+      this.$store.commit('setUser', 'guest')
       this.page = 'building'
-      this.user = 'guest'
     },
 
     logout() {
+      this.$store.commit('setUser', null)
       this.page = 'user'
-      this.user = null
       this.$modal.hide('logout')
     },
 
     onUser() {
-      if (this.user)
+      if (this.$store.state.user)
         this.$modal.show('logout')
       else
         this.page = 'user'
@@ -86,8 +83,8 @@ export default {
   },
 
   mounted() {
+    this.$store.commit('setUser', 'guest')
     this.page = 'building'
-    this.user = 'guest'
     this.$refs.building.newItem()
   },
 

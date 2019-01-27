@@ -45,7 +45,7 @@ export default {
   computed: {
 
     disabled() {
-      if (!this.loggedIn)
+      if (!this.$store.state.user)
         return '請先登入'
       return false
     },

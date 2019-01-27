@@ -42,7 +42,7 @@ export default {
 
   computed: {
     disabled() {
-      if (!this.loggedIn)
+      if (!this.$store.state.user)
         return '請先登入'
       if (-1 === this.iBuilding)
         return '請先選擇房屋'

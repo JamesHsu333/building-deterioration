@@ -4,7 +4,7 @@ div
   .ui.fixed.icon.item.labeled.three.menu
     .item(:class="{active: page == 'user'}",@click="onUser")
       i.user.icon
-      | {{ $store.state.user ? '登出' : '登入' }}
+      | {{ user ? '登出' : '登入' }}
     .item(:class="{active: page == 'building'}",@click="page = 'building'") #[i.home.icon]我的房屋
     .item(:class="{active: page == 'deterioration'}",@click="page = 'deterioration'") #[i.bolt.icon]劣化記錄
   vue-js-modal(name="logout",height="auto",width="90%"): .ui.active.modal
@@ -18,18 +18,21 @@ div
       v-show="'user' === page"
       @guest-login="guestLogin"
       text="page"
-    )
+      )
     building-page(
       v-show="'building' === page"
-      @item-change="changeBuilding"
+      :loggedIn="user"
+      @item-change="buildingChange"
       ref="building"
-      @page-change="changePage"
+      @change-page="changePage"
       text="page"
-    )
+      )
     deterioration-page(
       v-show="'deterioration' === page"
+      :logged-in="user"
+      ref="deterioration"
       text="page"
-    )
+      )
 
 </template>
 
@@ -45,16 +48,20 @@ export default {
   },
 
   data() { return {
-    user: null,
-    iBuilding: -1,
-    // page: 'deterioration',
     page: 'user',
+    user: null,
   }},
 
   methods: {
 
-    changeBuilding(i) {
-      this.iBuilding = i
+    buildingChange(iBuilding) {
+      const { building, deterioration } = this.$refs
+      if (!deterioration)
+        return
+      if (building.item)
+        console.log(building.item.deteriorations.length)
+      deterioration.building = building.item
+      deterioration.iItem = deterioration.items.length
     },
 
     changePage(page) {
@@ -62,18 +69,18 @@ export default {
     },
 
     guestLogin() {
-      this.$store.commit('setUser', 'guest')
       this.page = 'building'
+      this.user = 'guest'
     },
 
     logout() {
-      this.$store.commit('setUser')
       this.page = 'user'
+      this.user = null
       this.$modal.hide('logout')
     },
 
     onUser() {
-      if (this.$store.state.user)
+      if (this.user)
         this.$modal.show('logout')
       else
         this.page = 'user'
@@ -82,9 +89,9 @@ export default {
   },
 
   mounted() {
-    this.$store.commit('setUser', 'guest')
+    this.page = 'building'
+    this.user = 'guest'
     this.$refs.building.newItem()
-    this.page = 'deterioration'
   },
 
 }

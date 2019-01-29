@@ -3,7 +3,7 @@
 
   #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
 
-  #building.ui.form(v-if="!disabled && building")
+  #building.ui.form(v-if="!disabled && iItem < items.length")
     photo-input(label="建築物外觀")
     .-two-column
       .field
@@ -20,23 +20,22 @@
         label 樓層
         input(v-model.number="item.nFloors",placeholder="請輸入")
     .ui.fixed.item.menu: .item
-      button.ui.primary.button(@click="list") #[i.chevron.left.icon]房屋列表
-      button.ui.primary.button(@click="deterioration") 劣化記錄#[i.chevron.right.icon]
+      button.ui.primary.button(@click="setIItem(items.length)") #[i.chevron.left.icon]房屋列表
+      button.ui.primary.button(@click="$emit('change-page', 'deterioration')") 劣化記錄#[i.chevron.right.icon]
 
-  #building-list.-two-column(v-show="!disabled && !building")
+  #building-list.-two-column(v-show="!disabled && iItem >= items.length")
     .-item(@click="newItem")
       i.huge.icons
         i.circular.home.icon
         i.corner.add.icon
       p 新增建築物
-    .-item(v-for="(v, i) in items",@click="setItem(i)")
+    .-item(v-for="(v, i) in items",@click="setIItem(i)")
       i.circular.huge.home.icon
       p {{ v.name }}
 </template>
 
 <script>
 const defaultBuilding = {
-  deteriorations: [],
   district: '',
   city: '台南市',
   construction: '',
@@ -54,24 +53,18 @@ export default {
 
   computed: {
 
-    building() {
-      return this.$store.getters.building
-    },
-
     disabled() {
-      if (!this.$store.state.user)
+      if (!this.loggedIn)
         return '請先登入'
       return false
-    },
-
-    items() {
-      return this.$store.state.buildings
     },
 
   },
 
   data() { return { // {{{
+    iItem: 0,
     item: { ...defaultBuilding },
+    items: [],
     selects: {
       cities: ['台南市'],
       constructions: ['鋼筋混凝土', '鋼骨鋼筋混凝土', '鋼構造', '木構造', '磚造'],
@@ -84,29 +77,23 @@ export default {
 
   methods: {
 
-    deterioration() {
-      this.$store.commit('setBuilding', this.item)
-      this.$emit('page-change', 'deterioration')
-    },
-
-    list() {
-      this.$store.commit('setBuilding', this.item)
-      this.$store.commit('setIBuilding')
-    },
-
     newItem() {
-      const item = { ...defaultBuilding }
-      item.name += this.items.length + 1
-      this.$store.commit('addBuilding', item)
-      this.setItem(-1)
+      this.iItem = this.items.length
+      this.item = { ...defaultBuilding, deteriorations: [] }
+      this.item.name += this.iItem + 1
+      this.items.push(this.item)
+      this.$emit('item-change', this.iItem)
     },
 
-    setItem(i) {
-      this.$store.commit('setIBuilding', i)
-      this.item = { ...this.building }
+    setIItem(i) {
+      this.iItem = i
+      this.item = i < this.items.length ? this.items[i] : null
+      this.$emit('item-change', this.iItem)
     },
 
   },
+
+  props: ['loggedIn'],
 
 }
 </script>

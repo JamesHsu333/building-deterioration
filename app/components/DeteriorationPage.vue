@@ -1,7 +1,7 @@
 <template lang="pug">
 #deterioration-page
 
-  #deterioration.ui.form(v-if="!disabled && deterioration")
+  #deterioration.ui.form(v-if="!disabled && iItem < items.length")
     photo-input(label="劣化部位外觀")
     .-two-column
       .field
@@ -15,15 +15,15 @@
       base-select(:items="selects.spaces",label="空間名稱",v-model="item.space")
       base-select(:items="selects.degrees",label="劣化程度(選填)",v-model="item.degree")
     .ui.fixed.icon.item.menu
-      .item: button.ui.primary.button(@click="saveItem") #[i.check.icon]確認
+      .item: button.ui.primary.button(@click="iItem = items.length") #[i.check.icon]確認
 
-  #deterioration-list.-two-column(v-show="!disabled && !deterioration")
+  #deterioration-list.-two-column(v-show="!disabled && iItem >= items.length")
     .-item(@click="newItem")
       i.huge.icons
         i.circular.bolt.icon
         i.corner.add.icon
       p 新增劣化記錄
-    .-item(v-for="(v, i) in items",@click="setItem(i)")
+    .-item(v-for="(v, i) in items",@click="setIItem(i)")
       i.circular.huge.bolt.icon
       p {{ v.name }}
     .ui.fixed.icon.item.labeled.menu: .item
@@ -51,25 +51,23 @@ export default {
 
   computed: {
 
-    deterioration() {
-      return this.$store.getters.deterioration
-    },
-
     disabled() {
-      if (!this.$store.state.user)
+      if (!this.loggedIn)
         return '請先登入'
-      if (undefined === this.$store.state.iBuilding)
+      if (!this.building)
         return '請先選擇房屋'
       return false
     },
 
     items() {
-      return this.$store.getters.deteriorations
+      return this.building ? this.building.deteriorations : []
     },
 
   },
 
   data() { return {
+    building: null,
+    iItem: 0,
     item: { ...defaultDeterioration },
     selects: {
       degrees: ['程度'],
@@ -82,23 +80,20 @@ export default {
   methods: {
 
     newItem() {
-      const item = { ...defaultDeterioration }
-      item.name += this.items.length + 1
-      this.$store.commit('addDeterioration', item)
-      this.setItem(-1)
+      this.iItem = this.items.length
+      this.item = { ...defaultDeterioration }
+      this.item.name += this.iItem + 1
+      this.building.deteriorations.push(this.item)
     },
 
-    saveItem() {
-      this.$store.commit('setDeterioration', this.item)
-      this.$store.commit('setIDeterioration')
-    },
-
-    setItem(i) {
-      this.$store.commit('setIDeterioration', i)
-      this.item = { ...this.deterioration }
+    setIItem(i) {
+      this.iItem = i
+      this.item = this.items[i]
     },
 
   },
+
+  props: ['loggedIn'],
 
 }
 </script>

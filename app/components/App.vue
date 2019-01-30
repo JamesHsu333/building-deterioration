@@ -31,6 +31,7 @@ div
       v-show="'deterioration' === page"
       :logged-in="user"
       ref="deterioration"
+      @submit="submit"
       text="page"
       )
 
@@ -58,8 +59,6 @@ export default {
       const { building, deterioration } = this.$refs
       if (!deterioration)
         return
-      if (building.item)
-        console.log(building.item.deteriorations.length)
       deterioration.building = building.item
       deterioration.iItem = deterioration.items.length
     },
@@ -84,7 +83,11 @@ export default {
         this.$modal.show('logout')
       else
         this.page = 'user'
-    }
+    },
+
+    submit() {
+      console.log(this.$refs.building.item) //! submit to server
+    },
 
   },
 

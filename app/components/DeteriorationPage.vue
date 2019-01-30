@@ -27,7 +27,10 @@
       i.circular.huge.bolt.icon
       p {{ v.name }}
     .ui.fixed.icon.item.labeled.menu: .item
-      button.ui.primary.button(:class="{disabled: 0 === items.length}") #[i.upload.icon]送出
+      button.ui.primary.button(
+        :class="{disabled: 0 === items.length}"
+        @click="$emit('submit')"
+        ) #[i.upload.icon]送出
 
   #disabled(v-show="disabled"): h1.ui.header {{ disabled }}
 </template>

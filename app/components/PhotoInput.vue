@@ -1,23 +1,31 @@
 <template lang="pug">
 .field
   label {{ label }}
-  vue-picture-input(
-    :changeOnClick="false"
-    @click="expand"
-    height="160"
-    :hideChangeButton="true"
-    :plain="true"
-    :prefill="defaultPhoto"
-    ref="photo"
-    :width="containerWidth"
-    :zIndex="200"
-  )
+  #photos(:style="{ height: photoHeight + 'px' }")
+    vue-picture-input.-photo(
+      v-for="(v, i) in photos"
+      @change="photoChange"
+      :changeOnClick="false"
+      :class="{ active: i == iPhoto }"
+      @click="expand"
+      :height="160"
+      :hideChangeButton="true"
+      :plain="true"
+      :prefill="defaultPhoto"
+      ref="photos"
+      :width="containerWidth"
+      :zIndex="200"
+      )
   .ui.bottom.attached.menu
-    .item(@click="$refs.photo.selectImage()") #[i.camera.icon]拍照
-    .item #[i.images.outline.icon]新增
+    .item(@click="photo.selectImage()") #[i.camera.icon]拍照
+    .item(v-show="photos[photos.length - 1]",@click="newPhoto") #[i.plus.icon]新增
     .right.menu
-      .icon.item: i.chevron.left.icon
-      .icon.item: i.chevron.right.icon
+      .icon.item(:class="{ disabled: firstPhoto }",@click="firstPhoto || --iPhoto"): i.chevron.left.icon
+      .item {{ iPhoto + 1 }} / {{ photos.length }}
+      .icon.item(
+        :class="{ disabled: lastPhoto }"
+        @click="lastPhoto || ++iPhoto"
+        ): i.chevron.right.icon
   canvas(@click="full = false",ref="canvas",:style="canvasStyle")
 </template>
 
@@ -39,12 +47,27 @@ export default {
       }
     },
 
+    firstPhoto() {
+      return 0 == this.iPhoto
+    },
+
+    lastPhoto() {
+      return this.iPhoto === this.photos.length - 1
+    },
+
+    photo() {
+      return this.$refs.photos[this.iPhoto]
+    },
+
   },
 
   data() { return {
     containerWidth: window.innerWidth,
     defaultPhoto: require('../lance-anderson-213491-unsplash.jpg'),
     full: false,
+    iPhoto: 0,
+    photoHeight: 0,
+    photos: [false],
   }},
 
   methods: {
@@ -52,7 +75,7 @@ export default {
     expand() {
       this.full = true
       const canvas = this.$refs.canvas
-      const image = this.$refs.photo.imageObject
+      const image = this.photo.imageObject
 
       const [ A1, A2 ] = [ image.width, canvas.width ]
       const dA = A2 - A1
@@ -61,14 +84,26 @@ export default {
       const [ A3, B3 ] = dA < dB
         ? [ A1 + A1 * dB / B1, B2 ]
         : [ A2, B1 + B1 * dA / A1 ]
-      this.$refs.canvas.getContext('2d').drawImage(image, (A2 - A3) / 2, (B2 - B3) / 2, A3, B3)
+      canvas.getContext('2d').drawImage(image, (A2 - A3) / 2, (B2 - B3) / 2, A3, B3)
+    },
+
+    newPhoto() {
+      this.photos.push(false)
+      this.iPhoto = this.photos.length - 1
+    },
+
+    photoChange() {
+      this.$set(this.photos, this.iPhoto, this.photo.imageSelected)
     },
 
   },
 
   mounted() {
-    this.$refs.canvas.height = window.innerHeight
-    this.$refs.canvas.width = window.innerWidth
+    const { canvas, photos } = this.$refs
+    canvas.height = window.innerHeight
+    canvas.width = window.innerWidth
+    const me = this
+    setTimeout(() => me.photoHeight = photos[0].previewHeight, 0) // let canvas resize
   },
 
   props: ['label'],
@@ -77,6 +112,17 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+#photos
+  position: relative
+
+.-photo
+  left: -10000px
+  position: absolute
+  top: 0
+
+  &.active
+    left: 0
+
 canvas
   left: 0
   opacity: 0

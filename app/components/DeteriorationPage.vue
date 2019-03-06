@@ -12,8 +12,8 @@
         input(v-model.number="item.floor",placeholder="請輸入")
       base-select(:items="selects.types",label="劣化種類",v-model="item.type")
       base-select(:items="selects.elements",label="部位",v-model="item.element")
-      base-select(:items="selects.spaces",label="空間名稱",v-model="item.space")
-      base-select(:items="selects.degrees",label="劣化程度(選填)",v-model="item.degree")
+      base-select(:items="selects.spaces[building.usage]",label="空間名稱",v-model="item.space")
+      base-select(:items="selects.degrees[item.type]",label="劣化程度(選填)",v-model="item.degree")
     .ui.fixed.icon.item.menu
       .item: button.ui.primary.button(@click="iItem = items.length") #[i.check.icon]確認
 
@@ -73,10 +73,23 @@ export default {
     iItem: 0,
     item: { ...defaultDeterioration },
     selects: {
-      degrees: ['程度'],
-      spaces: ['空間'],
-      parts: ['部位'],
-      types: ['種類'],
+      degrees: {
+        變形: ['輕微', '嚴重'],
+        漏水: ['少部分小面積漏水', '少部分大面積漏水', '多處小面積漏水', '多處大面積漏水', '其他'],
+        鼓脹: ['自行打字輸入'],
+        剝落: ['少部分小塊掉落', '少部分大塊掉落', '多處小塊掉落', '多處大塊掉落', '其他'],
+        裂縫: ['寬度', '深度', '長度', '其他'],
+        鋼筋外露: ['少部分看的到鋼筋但未有鏽水', '多處看的到鋼筋但未有鏽水', '少部分看的到鋼筋已有鏽水', '多處看的到鋼筋已有鏽水', '其他'],
+        白華: ['輕微小面積', '嚴重大面積', '其他'],
+      },
+      elements: ['柱', '梁', '樓版', '牆', '門窗', '樓梯'],
+      spaces: {
+        '': [],
+        商辦建築: ['迎賓大廳', '地下室', '騎樓', '樓梯間', '其他共用區域', '會議室', '辦公區域', '影印室', '茶水間', '接待室', '開放討論區', '浴廁', '其他'],
+        集合住宅: ['迎賓大廳', '地下室', '騎樓', '樓梯間', '其他共用區域', '客廳', '廚房', '臥房', '書房', '餐廳', '儲藏室', '浴廁', '其他'],
+        透天住宅: ['騎樓', '客廳', '廚房', '臥房', '書房', '餐廳', '儲藏室', '浴室', '樓梯間', '其他'],
+      },
+      types: ['變形', '漏水', '鼓脹', '剝落', '裂縫', '鋼筋外露', '白華', '其他'],
     },
   }},
 

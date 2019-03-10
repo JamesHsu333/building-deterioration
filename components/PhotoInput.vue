@@ -63,7 +63,7 @@ export default {
 
   data() { return {
     containerWidth: window.innerWidth,
-    defaultPhoto: require('../lance-anderson-213491-unsplash.jpg'),
+    defaultPhoto: require('../res/lance-anderson-213491-unsplash.jpg'),
     full: false,
     iPhoto: 0,
     photoHeight: 0,

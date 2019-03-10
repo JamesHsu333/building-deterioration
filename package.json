@@ -2,8 +2,8 @@
   "name": "building-deterioration",
   "version": "0.0.1",
   "scripts": {
-    "build": "parcel build ./app/index.pug",
-    "start": "parcel ./app/index.pug --port $(/bin/cat port 2> /dev/null || /bin/echo 1234)"
+    "build": "parcel build ./index.pug",
+    "start": "parcel ./index.pug --port $(/bin/cat port 2> /dev/null || /bin/echo 1234)"
   },
   "license": "All rights reserved",
   "private": true,

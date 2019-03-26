@@ -14,6 +14,13 @@
       base-select(:items="selects.elements",label="部位",v-model="item.element")
       base-select(:items="selects.spaces[building.usage]",label="空間名稱",v-model="item.space")
       base-select(:items="selects.degrees[item.type]",label="劣化程度(選填)",v-model="item.degree")
+    .field(v-if="details.includes(item.type) && item.degree != ''")
+      label 劣化程度(長x寬)
+      .-two-column
+        .field
+          input(placeholder="長(公分)",v-model="item.details.length")
+        .field
+          input(placeholder="寬(公分)",v-model="item.details.width")
     .ui.fixed.icon.item.menu
       .item: button.ui.primary.button(@click="iItem = items.length") #[i.check.icon]確認
 
@@ -43,6 +50,10 @@ const defaultDeterioration = {
   name: '未命名',
   space: '',
   type: '',
+  details: {
+    length: '',
+    width: '',
+  },
 }
 
 export default {
@@ -91,6 +102,7 @@ export default {
       },
       types: ['變形', '漏水', '鼓脹', '剝落', '裂縫', '鋼筋外露', '白華', '其他'],
     },
+    details: ['鼓脹', '剝落', '裂縫', '白華'],
   }},
 
   methods: {
@@ -133,6 +145,10 @@ export default {
 
 #disabled
   text-align: center
+
+.details
+  margin-top: 10px
+
 </style>
 
 <!--

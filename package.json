@@ -4,7 +4,7 @@
   "description": "building-deterioration",
   "scripts": {
     "django": "python manage.py runserver 0.0.0.0:$(/bin/cat port 2> /dev/null || /bin/echo 8000)",
-    "parcel": "parcel ./index.pug --port $(/bin/cat port 2> /dev/null || /bin/echo 1234) --public-url dist",
+    "parcel": "parcel ./index.pug --port $(/bin/cat port 2> /dev/null || /bin/echo 1234)",
     "parcel-build": "parcel build ./index.pug --public-url dist",
     "parcel-watch": "parcel watch ./index.pug --public-url dist",
     "start": "concurrently 'yarn run django' 'yarn run parcel-watch'"

@@ -14,13 +14,12 @@
       base-select(:items="selects.elements",label="部位",v-model="item.element")
       base-select(:items="selects.spaces[building.usage]",label="空間名稱",v-model="item.space")
       base-select(:items="selects.degrees[item.type]",label="劣化程度(選填)",v-model="item.degree")
-    .field(v-if="details.includes(item.type) && item.degree != ''")
-      label 劣化程度(長x寬)
-      .-two-column
-        .field
-          input(placeholder="長(公分)",v-model="item.details.length")
-        .field
-          input(placeholder="寬(公分)",v-model="item.details.width")
+      .field(v-show="'其他' === item.degree")
+        label 劣化程度(長x寬)
+        input(v-model="item.length",placeholder="長(公分)")
+      .field(v-show="'其他' === item.degree")
+        label &nbsp;
+        input(v-model="item.width",placeholder="寬(公分)")
     .ui.fixed.icon.item.menu
       .item: button.ui.primary.button(@click="iItem = items.length") #[i.check.icon]確認
 
@@ -47,13 +46,11 @@ const defaultDeterioration = {
   degree: '',
   element: '',
   floor: 1,
+  length: '',
   name: '未命名',
   space: '',
   type: '',
-  details: {
-    length: '',
-    width: '',
-  },
+  width: '',
 }
 
 export default {
@@ -87,7 +84,7 @@ export default {
       degrees: {
         變形: ['輕微', '嚴重'],
         漏水: ['少部分小面積漏水', '少部分大面積漏水', '多處小面積漏水', '多處大面積漏水', '其他'],
-        鼓脹: ['自行打字輸入'],
+        鼓脹: ['其他'],
         剝落: ['少部分小塊掉落', '少部分大塊掉落', '多處小塊掉落', '多處大塊掉落', '其他'],
         裂縫: ['寬度', '深度', '長度', '其他'],
         鋼筋外露: ['少部分看的到鋼筋但未有鏽水', '多處看的到鋼筋但未有鏽水', '少部分看的到鋼筋已有鏽水', '多處看的到鋼筋已有鏽水', '其他'],
@@ -100,9 +97,8 @@ export default {
         集合住宅: ['迎賓大廳', '地下室', '騎樓', '樓梯間', '其他共用區域', '客廳', '廚房', '臥房', '書房', '餐廳', '儲藏室', '浴廁', '其他'],
         透天住宅: ['騎樓', '客廳', '廚房', '臥房', '書房', '餐廳', '儲藏室', '浴室', '樓梯間', '其他'],
       },
-      types: ['變形', '漏水', '鼓脹', '剝落', '裂縫', '鋼筋外露', '白華', '其他'],
+      types: ['變形', '漏水', '鼓脹', '剝落', '裂縫', '鋼筋外露', '白華'],
     },
-    details: ['鼓脹', '剝落', '裂縫', '白華'],
   }},
 
   methods: {
@@ -145,10 +141,6 @@ export default {
 
 #disabled
   text-align: center
-
-.details
-  margin-top: 10px
-
 </style>
 
 <!--

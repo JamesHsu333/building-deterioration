@@ -19,6 +19,8 @@
   .ui.bottom.attached.menu
     .item(@click="photo.selectImage()") #[i.camera.icon]拍照
     .item(v-show="photos[photos.length - 1]",@click="newPhoto") #[i.plus.icon]新增
+    .item(v-show="photos[photos.length - 1] && iPhoto === (photos.length - 1) && iPhoto !== 0", @click="removePhoto") #[i.minus.icon]移除
+    .item(@click="getPhoto") #[i.eye.icon]顯示
     .right.menu
       .icon.item(:class="{ disabled: firstPhoto }",@click="firstPhoto || --iPhoto"): i.chevron.left.icon
       .item {{ iPhoto + 1 }} / {{ photos.length }}
@@ -94,6 +96,15 @@ export default {
 
     photoChange() {
       this.$set(this.photos, this.iPhoto, this.photo.imageSelected)
+    },
+
+    removePhoto() {
+      this.photos.splice(this.iPhoto, 1)
+      this.iPhoto = this.iPhoto - 1
+    },
+
+    getPhoto() {
+      console.log(this.photo.image)
     },
 
   },

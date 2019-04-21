@@ -3,3 +3,5 @@ db.sqlite3
 dist/
 node_modules/
 __pycache__/
+README.md
+port

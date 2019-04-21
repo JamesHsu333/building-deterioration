@@ -25,7 +25,7 @@ SECRET_KEY = 'koy%m^=wt(jrs5b%^&5i=7nhilx626@t=$2*#akr^1v!ww)*-#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['merry.ee.ncku.edu.tw', '127.0.0.1']
 
 
 # Application definition

@@ -39,6 +39,8 @@ div
 
 <script>
 import 'semantic-ui-offline/semantic.min.css'
+import axios from 'axios'
+import 'babel-polyfill'
 
 export default {
 
@@ -48,9 +50,14 @@ export default {
     'login-page': require('./LoginPage.vue').default,
   },
 
+  created() {
+    this.getDatas()
+  },
+
   data() { return {
     page: 'user',
     user: null,
+    datas: {},
   }},
 
   methods: {
@@ -65,6 +72,16 @@ export default {
 
     changePage(page) {
       this.page = page
+    },
+
+    async getDatas() {
+      let self = this;
+      axios.get('/getDatas/')
+        .then(function(response) {
+          const res = response.data.list
+          self.datas = res
+          console.log(self.datas)
+        })
     },
 
     guestLogin() {
